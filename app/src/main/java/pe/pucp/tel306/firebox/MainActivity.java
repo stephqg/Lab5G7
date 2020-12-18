@@ -2,71 +2,70 @@ package pe.pucp.tel306.firebox;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements InicioFragment.Funciones{
+
+    String miUID;
+    String nombre;
+    String correo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null){
-            String uid = currentUser.getUid();
-            String displayName = currentUser.getDisplayName();
-            String email = currentUser.getEmail();
-
-            Log.d("infoApp", "uid: " + uid + " | displayName: " + displayName + " | email: " + email );
-
-            //ACÁ INTENT HACIA OTRA ACTIVIDAD
-        }
-
+        abrirFragmentoInicio();
     }
 
 
-    public void login (View view){
+    //FUNCION PARA SOLO ABRIR EL FRAGMENTO INGRESO CON CONTRASEÑA
+    public void abrirFragmentoInicio(){
+        InicioFragment inicioSesionFragmento = new InicioFragment().newInstance();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        List<AuthUI.IdpConfig> proveedores = Arrays.asList(
-            new AuthUI.IdpConfig.EmailBuilder().build(),
-            new AuthUI.IdpConfig.GoogleBuilder().build()
-        );
-
-        Intent intent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(proveedores).build();
-
-        startActivityForResult(intent, 1);
-
+        fragmentTransaction.add(R.id.fragmentContainer,inicioSesionFragmento);
+        fragmentTransaction.commit();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void guardarRegistro(String uid, String displayName, String email) {
+        miUID= uid;
+        nombre=displayName;
+        correo=email;
 
-        if (requestCode == 1){
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (currentUser != null){
-                String uid = currentUser.getUid();
-                String displayName = currentUser.getDisplayName();
-                String email = currentUser.getEmail();
+        //CON ESTO SE SUPONE SE DEBERÍA ABRIR EL FRAGMENTO PRINCIPAL DONDE IRÁ TODA LA INFO
+        PrincipalFragment f = (PrincipalFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        f.recepcionUID(uid,displayName);
+    }
 
-                Log.d("infoApp", "uid: " + uid + " | displayName: " + displayName + " | email: " + email );
+    //FUNCION PARA BORRAR FRAGMENTO DE INICIO
+    @Override
+    public void borrarFragmentoInicio() {
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
 
-                //ACÁ INTENT HACIA OTRA ACTIVIDAD
-            }
+        InicioFragment inicioSesionFragmento = (InicioFragment) supportFragmentManager.findFragmentById(R.id.fragmentContainer);
+        if (inicioSesionFragmento != null) { //SI HAY UNFRAGMENTO QUE BORRAR SE INGRESA AL IF
+            //se inicia la transaccion
+            FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+            fragmentTransaction.remove(inicioSesionFragmento);
+            fragmentTransaction.commit();
 
         }
     }
+
+
+
+
+
 }
