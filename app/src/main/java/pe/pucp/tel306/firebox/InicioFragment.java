@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,13 +22,11 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InicioFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class InicioFragment extends Fragment {
 
+    View vista;
+    private Button botonIngresar;
+    private  FirebaseUser currentUser = null;
 
     public InicioFragment() {
         // Required empty public constructor
@@ -47,35 +46,47 @@ public class InicioFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        vista = inflater.inflate(R.layout.fragment_inicio,container,false);
+        return vista;
+    }
 
-        View view = inflater.inflate(R.layout.fragment_inicio, container, false);
-        Button botonInicio = view.findViewById(R.id.btnIngresar);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        botonInicio.setOnClickListener(new View.OnClickListener() {
+        botonIngresar = vista.findViewById(R.id.btnIngresar);
+
+        botonIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<AuthUI.IdpConfig> proveedores = Arrays.asList(
-                        new AuthUI.IdpConfig.EmailBuilder().build(),
-                        new AuthUI.IdpConfig.GoogleBuilder().build()
-                );
-
-                Intent intent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(proveedores).build();
-
-                startActivityForResult(intent, 1);
+                Ingresar();
             }
 
         });
 
-
-        return inflater.inflate(R.layout.fragment_inicio, container, false);
     }
 
-    @Override
+    public void Ingresar(){
+        List<AuthUI.IdpConfig> proveedores = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build()
+        );
+
+        Intent intent =
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(proveedores)
+                        .build();
+        startActivityForResult(intent, 2002);
+    }
+
+   @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1){
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (requestCode == 2002){
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
             if (currentUser != null){
                 String uid = currentUser.getUid();
                 String displayName = currentUser.getDisplayName();
@@ -83,6 +94,12 @@ public class InicioFragment extends Fragment {
 
                 Log.d("infoApp", "uid: " + uid + " | displayName: " + displayName + " | email: " + email );
 
+                if (currentUser != null){
+                    Toast.makeText(getContext(), "Bienvenid@: "+ displayName,Toast.LENGTH_SHORT).show();
+                    Intent i;
+                    i = new Intent(getContext(),HomeActivity.class);
+                    startActivity(i);
+                }
             }
 
         }

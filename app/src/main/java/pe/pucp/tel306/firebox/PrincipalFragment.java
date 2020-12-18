@@ -19,14 +19,14 @@ import android.widget.TextView;
  */
 public class PrincipalFragment extends Fragment {
 
-    TextView nombreUsuario;
+
 
     public PrincipalFragment() {
         // Required empty public constructor
     }
 
 
-    public static PrincipalFragment newInstance(String param1, String param2) {
+    public static PrincipalFragment newInstance() {
         PrincipalFragment fragment = new PrincipalFragment();
         return fragment;
     }
@@ -48,12 +48,12 @@ public class PrincipalFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView nombreUsuario = view.findViewById(R.id.nombreUsuario);
+
     }
 
     protected void recepcionUID(String uid, String nombre)
     {
-        nombreUsuario.setText(nombre);
+
         //Acá se puede utilizar el uid para más cosas
     }
 

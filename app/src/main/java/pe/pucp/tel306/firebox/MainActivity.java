@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity implements InicioFragment.Funciones{
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
         setContentView(R.layout.activity_main);
 
         abrirFragmentoInicio();
+
     }
 
 
@@ -64,8 +67,12 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
         }
     }
 
-
-
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }
