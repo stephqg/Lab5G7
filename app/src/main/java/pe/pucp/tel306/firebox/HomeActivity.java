@@ -1,7 +1,6 @@
 package pe.pucp.tel306.firebox;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -38,39 +37,48 @@ public class HomeActivity extends AppCompatActivity {
         nombreUsuario = findViewById(R.id.textViewNombre);
         fabButton = findViewById(R.id.floatingActionButton);
 
-        fabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // aqui primero se muestra el dialogo de obtener archivo desde el cel
-                Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
-                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
-                        .setCheckPermission(true)
-                        .setSelectedMediaFiles(mediaFiles)
-                        .setShowFiles(true)
-                        .setShowImages(true)
-                        .setShowAudios(true)
-                        .setShowVideos(true)
-                        .setIgnoreNoMedia(false)
-                        .enableVideoCapture(true)
-                        .enableImageCapture(true)
-                        .setIgnoreHiddenFile(true)
-                        // .setMaxSelection(10)
-                        // .setTitle("Select a file")
-                        .build());
-                startActivityForResult(intent, FILE_REQUEST_CODE);
+        fabButton.setOnClickListener(v -> {
+            // aqui primero se muestra el dialogo de obtener archivo desde el cel
+            Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
+            intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                    .setCheckPermission(true)
+                    .setSelectedMediaFiles(mediaFiles)
+                    .setShowFiles(true)
+                    .setShowImages(true)
+                    .setShowAudios(true)
+                    .setShowVideos(true)
+                    .setIgnoreNoMedia(false)
+                    .enableVideoCapture(true)
+                    .enableImageCapture(true)
+                    .setIgnoreHiddenFile(true)
+                    // .setMaxSelection(10)
+                    // .setTitle("Select a file")
+                    .build());
+            startActivityForResult(intent, FILE_REQUEST_CODE);
 
-                // luego de seleccionar el archivo, se sube a la carpeta en la nube D:
+            // luego de seleccionar el archivo, se sube a la carpeta en la nube D:
 
-
-                // finalmente el proceso se va a monitorear hasta que termine de subir
-
+            for (MediaFile mf :
+                    mediaFiles) {
+                PrincipalFragment homeFragment = (PrincipalFragment) HomeActivity.this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer2);
+                if (homeFragment.isAdded()) {
+                    String path = homeFragment.getPath();
+                    SubirArchivoAFirebase(mf, path);
+                }
 
             }
+
+
         });
         setContentView(R.layout.activity_home);
 
         abrirFragmentoPrincipal();
 
+    }
+
+    private void SubirArchivoAFirebase(MediaFile mediaFile, String path) {
+        // aqui deberia subir el archivo a firebase utilizando el path de referencia que obtengo del fragment
+        // finalmente el proceso se va a monitorear hasta que termine de subir
     }
 
     public void abrirFragmentoPrincipal() {
