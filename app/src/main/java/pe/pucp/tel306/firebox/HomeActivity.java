@@ -1,5 +1,6 @@
 package pe.pucp.tel306.firebox;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,6 +32,21 @@ public class HomeActivity extends AppCompatActivity {
     String email = currentUser.getEmail();
     TextView nombreUsuario;
     Button fabButton;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILE_REQUEST_CODE
+                && resultCode == RESULT_OK
+                && data != null) {
+            List<MediaFile> mediaFiles = data.<MediaFile>getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+            if (mediaFiles != null) {
+                setMediaFiles(mediaFiles);
+            } else {
+                Toast.makeText(HomeActivity.this, "Image not selected", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
                     .build());
             startActivityForResult(intent, FILE_REQUEST_CODE);
 
-            // luego de seleccionar el archivo, se sube a la carpeta en la nube D:
+            // luego de seleccionar el o los archivos, se sube a la carpeta en la nube D:
 
             for (MediaFile mf :
                     mediaFiles) {
