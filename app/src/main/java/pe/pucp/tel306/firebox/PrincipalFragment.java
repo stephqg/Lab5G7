@@ -50,7 +50,7 @@ public class PrincipalFragment extends Fragment {
     protected void recepcionUID(String uid, String nombre)
     {
 
-        //Acá se puede utilizar el uid para más cosas
+
     }
 
 }

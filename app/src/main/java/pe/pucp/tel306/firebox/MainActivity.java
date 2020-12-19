@@ -13,6 +13,21 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import pe.pucp.tel306.firebox.Clases.Usuario;
+
+
+/*
+FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = currentUser.getUid();
+    String displayName = currentUser.getDisplayName();
+    String email = currentUser.getEmail();
+    TextView nombreUsuario;
+ */
+
+
 
 
 public class MainActivity extends AppCompatActivity implements InicioFragment.Funciones{
@@ -54,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
 
     //FUNCION PARA BORRAR FRAGMENTO DE INICIO
     @Override
-    public void borrarFragmentoInicio() {
+    public void borrarFragmentoInicio(String uid, String displayName, String email) {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
 
         InicioFragment inicioSesionFragmento = (InicioFragment) supportFragmentManager.findFragmentById(R.id.fragmentContainer);
@@ -63,8 +78,23 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
             FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
             fragmentTransaction.remove(inicioSesionFragmento);
             fragmentTransaction.commit();
-
         }
+
+        miUID=uid;
+        nombre=displayName;
+        correo=email;
+        abrirFragmentoPrincipal();
+
+    }
+
+    public void abrirFragmentoPrincipal(){
+
+        PrincipalFragment principalFragment = new PrincipalFragment().newInstance();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.add(R.id.fragmentContainer,principalFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -74,5 +104,31 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
         if (fragment != null) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+
+
+
+
+    //FIREBASE STORAGE
+
+
+
+    //FIRESTORE
+    public void crearDocumento(String uid,String nombre) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //SE crea la coleccion con el documento con el uid del usuario
+
+        //INFORAMCION BASICA DEL USUARIO
+        /*Map<String, Object> user = new HashMap<>();
+        user.put("Nombre", nombre);
+        user.put("Type", "FREE");
+        user.put("Capacidad", "500MB");*/
+
+        Usuario usuario=new Usuario(nombre,"FREE","500MB");
+
+        DocumentReference base = db.collection("User").document(uid);
+        base.set(usuario);
+
     }
 }

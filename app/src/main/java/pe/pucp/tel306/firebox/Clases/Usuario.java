@@ -6,6 +6,11 @@ public class Usuario {
     private String type;
     private String capacidad;
 
+    public Usuario(String nombre, String type, String capacidad) {
+        this.nombre = nombre;
+        this.type = type;
+        this.capacidad = capacidad;
+    }
 
     public String getNombre() {
         return nombre;
