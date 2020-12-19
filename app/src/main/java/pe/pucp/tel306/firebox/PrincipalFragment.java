@@ -42,7 +42,9 @@ public class PrincipalFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_principal, container, false);
-        return inflater.inflate(R.layout.fragment_principal, container, false);
+
+        // hacer algo con este fragment
+        return view;
     }
 
     @Override
