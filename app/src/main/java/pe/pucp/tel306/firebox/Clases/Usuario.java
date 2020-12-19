@@ -5,11 +5,21 @@ public class Usuario {
     private String nombre;
     private String type;
     private String capacidad;
+    private String correo;
 
-    public Usuario(String nombre, String type, String capacidad) {
+    public Usuario(String nombre, String type, String capacidad,String correo) {
         this.nombre = nombre;
         this.type = type;
         this.capacidad = capacidad;
+        this.correo=correo;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public String getNombre() {

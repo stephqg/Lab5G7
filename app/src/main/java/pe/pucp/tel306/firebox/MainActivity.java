@@ -1,5 +1,6 @@
 package pe.pucp.tel306.firebox;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -83,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
         miUID=uid;
         nombre=displayName;
         correo=email;
+
+        crearDocumento(miUID,nombre,correo);
         abrirFragmentoPrincipal();
 
     }
@@ -106,29 +111,35 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
         }
     }
 
-
-
-
-
     //FIREBASE STORAGE
 
 
 
     //FIRESTORE
-    public void crearDocumento(String uid,String nombre) {
+    public void crearDocumento(String uid,String nombre,String correo) {
+
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
         //SE crea la coleccion con el documento con el uid del usuario
-
-        //INFORAMCION BASICA DEL USUARIO
-        /*Map<String, Object> user = new HashMap<>();
-        user.put("Nombre", nombre);
-        user.put("Type", "FREE");
-        user.put("Capacidad", "500MB");*/
-
-        Usuario usuario=new Usuario(nombre,"FREE","500MB");
-
+        Usuario usuario=new Usuario(nombre,correo,"FREE","500MB");
         DocumentReference base = db.collection("User").document(uid);
-        base.set(usuario);
+        base.set(usuario).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("INFOAPP", "SUBIO");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("INFOAPP", "no");
+                e.printStackTrace();
+
+            }
+        });
 
     }
+
+
 }
