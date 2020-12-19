@@ -52,9 +52,13 @@ public class PrincipalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        usuario=funcionesPrincipalFragmento.obtenerUsuario();
+
         View view = inflater.inflate(R.layout.fragment_principal, container, false);
 
+        usuario=funcionesPrincipalFragmento.obtenerUsuario();
+        Log.d("Infoaoo",""+usuario.getNombre());
+        TextView text=view.findViewById(R.id.nombreUsuario);
+        text.setText(usuario.getNombre());
         Button btnSubir = view.findViewById(R.id.btnSubir);
         btnSubir.setOnClickListener(new View.OnClickListener() {
             @Override
