@@ -49,7 +49,7 @@ FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
 
-public class MainActivity extends AppCompatActivity implements InicioFragment.Funciones{
+public class MainActivity extends AppCompatActivity implements InicioFragment.Funciones,PrincipalFragment.FuncionesPrincipalFragmento{
 
     String miUID;
     String nombre;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        documento=0;
+
         abrirFragmentoInicio();
 
     }
@@ -129,35 +129,8 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
             fragment.onActivityResult(requestCode, resultCode, data);
         }
 
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            subirArchivoStorage(data.getData());
-
-        }
-
-
     }
 
-    private void subirArchivoStorage(Uri uri) {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        Log.d("infoApp", uri.getPath());
-
-        storageReference.child("archivo.jpg")
-                .putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d("infoApp", "subida exitosa");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("infoApp", "error en la subida");
-                        e.printStackTrace();
-                    }
-                });
-    }
 
 
     //FIRESTORE
@@ -168,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
 
 
         //SE crea la coleccion con el documento con el uid del usuario
-        Usuario usuario=new Usuario(nombre,"FREE","500MB",correo);
+        Usuario usuario=new Usuario(nombre,"FREE","500MB",correo,uid);
         DocumentReference base = db.collection("User").document(uid);
         base.set(usuario).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -186,22 +159,11 @@ public class MainActivity extends AppCompatActivity implements InicioFragment.Fu
 
 
     }
-///////////////////////////////////////////////////////////////////////////////////
-     int documento;
 
-    //FIREBASE STORAGE
-    //SUBIR ARCHIVO AL STORAGE
-    public void subirArchivo(View view) {
-        Intent intent = new Intent();
-        intent.setType(miUID+"/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Seleccionar archivo"), 1);
 
+    @Override
+    public Usuario obtenerUsuario() {
+        Usuario usuario=new Usuario(nombre,"FREE","500MB",correo,miUID);
+       return usuario;
     }
-
-
-
-
-
-
 }
