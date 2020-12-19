@@ -38,13 +38,7 @@ import java.io.File;
 import pe.pucp.tel306.firebox.Clases.Usuario;
 
 
-/*
-FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = currentUser.getUid();
-    String displayName = currentUser.getDisplayName();
-    String email = currentUser.getEmail();
-    TextView nombreUsuario;
- */
+
 
 
 
