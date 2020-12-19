@@ -94,27 +94,37 @@ public class InicioFragment extends Fragment {
 
                 Log.d("infoApp", "uid: " + uid + " | displayName: " + displayName + " | email: " + email );
 
-                if (currentUser != null){
+                funciones.borrarFragmentoInicio(uid,displayName,email);
+
+
+                /*if (currentUser != null){
                     Toast.makeText(getContext(), "Bienvenid@: "+ displayName,Toast.LENGTH_SHORT).show();
                     Intent i;
                     i = new Intent(getContext(),HomeActivity.class);
                     startActivity(i);
-                }
+                }*/
+
             }
 
         }
 
     }
 
-    public interface Funciones {
-        void guardarRegistro(String uid, String displayName, String email);
-        void borrarFragmentoInicio();
-    }
 
     private Funciones funciones;
+    public interface Funciones {
+        void guardarRegistro(String uid, String displayName, String email);
+        void borrarFragmentoInicio(String uid,String displayName,String email);
+
+    }
+
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         funciones = (Funciones)context;
     }
+
+
+
 }
