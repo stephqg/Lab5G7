@@ -12,11 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PrincipalFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PrincipalFragment extends Fragment {
 
 
